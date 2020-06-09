@@ -1,0 +1,57 @@
+---
+title: "corona"
+author: "Marcus Lee"
+date: "June 9, 2020"
+output: html_document
+---
+
+```{r}
+install.packages("xlsx")
+```
+
+
+```{r}
+library(dplyr)
+library(xlsx)
+```
+
+```{r}
+data<-time_series_covid19_deaths_global.csv
+print(head(data))
+```
+```{r}
+data2<-select(data,-c(1,3,4))
+print(head(data2))
+```
+
+```{r}
+#https://stackoverflow.com/questions/40360805/how-to-drop-x-in-column-names-after-merge
+names(data2) <- sub("^X", "", names(data2))
+print(head(data2))
+```
+
+
+```{r}
+#https://stackoverflow.com/questions/16535261/combine-rows-and-sum-their-values
+#Still kind of confused on why this works.
+#This is grouping by country
+data2_agg <- aggregate(. ~Country.Region,data   = data2, sum)
+print(head(data2_agg))
+```
+
+
+```{r}
+#Just making sure each ecountry has one value
+#This is not the most efficient way of finding it
+#https://stackoverflow.com/questions/15812380/count-a-value-in-a-column-in-a-data-frame-in-r-programming
+#table(data2_agg$Country.Region)
+```
+
+```{r}
+#Can't figure out a way to rename the column names
+#Going to have to do this manually as of 6/9/2020
+#Going to convert this to excel file
+write.xlsx(data2_agg, "C:/Users/irons/Desktop/corona/mydata.xlsx")
+```
+
+
